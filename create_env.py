@@ -38,7 +38,7 @@ def get_aws_credentials(profile: str, filepath: str):
         raise FileNotFoundError(f"{filepath} could not be found.")
 
 
-def write_environment(environment: PostmanEnvironment, filepath: str):
+def write_environment_to_file(environment: PostmanEnvironment, filepath: str):
     environment.write_to_file(filepath)
 
 
@@ -59,7 +59,7 @@ test_env = create_test_environment()
 credentials = get_aws_credentials("default", "~/.aws/credentials")
 aws_env = create_aws_sigV4_environment(credentials)
 
-write_environment(aws_env,  "./aws-env.json")
-write_environment(test_env, "./test-env.json")
+write_environment_to_file(aws_env,  "./aws-env.json")
+write_environment_to_file(test_env, "./test-env.json")
 
 print("Done")
