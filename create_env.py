@@ -1,9 +1,9 @@
 import json
-import uuid
 import configparser
 
 from os import path
-from dataclasses import dataclass
+from typing import List
+from dataclasses import dataclass, asdict
 
 
 @dataclass
@@ -11,6 +11,20 @@ class Credentials:
     access_key: str
     secret_key: str
     token: str = None
+
+
+@dataclass
+class PostmanVariable:
+    key: str
+    value: str
+
+
+@dataclass
+class PostmanEnvironment:
+    values: List[PostmanVariable]
+
+    def as_file(self):
+        return json.dumps(asdict(self))
 
 
 def get_aws_credentials(profile, filepath):
@@ -24,23 +38,10 @@ def get_aws_credentials(profile, filepath):
 
 
 def create_test_environment():
-    content = {
-        'id': str(uuid.uuid4()),
-        'name': "Whatever Env",
-        'values': [
-            {
-                "key": "size",
-                "value": "5",
-                "enabled": True
-            },
-        ],
-        "_postman_variable_scope": "environment",
-        "_postman_exported_at": "2021-06-30T14:05:25.551Z",
-        "_postman_exported_using": "Postman/8.6.2"
-
-    }
     with open("./Test-env.postman_environment.json", "w") as env:
-        env.write(json.dumps(content))
+        variables = [PostmanVariable("size", "5")]
+        content = PostmanEnvironment(variables)
+        env.write(content.as_file())
 
 
 print("Creating...")
