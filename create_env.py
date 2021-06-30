@@ -23,8 +23,9 @@ class PostmanVariable:
 class PostmanEnvironment:
     values: List[PostmanVariable]
 
-    def as_file(self):
-        return json.dumps(asdict(self))
+    def write_to_file(self, filepath):
+        with open(filepath, "w") as file:
+            file.write(json.dumps(asdict(self)))
 
 
 def get_aws_credentials(profile, filepath):
@@ -38,10 +39,9 @@ def get_aws_credentials(profile, filepath):
 
 
 def create_test_environment():
-    with open("./Test-env.postman_environment.json", "w") as env:
-        variables = [PostmanVariable("size", "5")]
-        content = PostmanEnvironment(variables)
-        env.write(content.as_file())
+    variables = [PostmanVariable("size", "5")]
+    content = PostmanEnvironment(variables)
+    content.write_to_file("./Test-env.postman_environment.json")
 
 
 print("Creating...")
