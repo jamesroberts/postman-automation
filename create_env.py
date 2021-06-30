@@ -1,5 +1,26 @@
 import json
 import uuid
+import configparser
+
+from os import path
+from dataclasses import dataclass
+
+
+@dataclass
+class Credentials:
+    access_key: str
+    secret_key: str
+    token: str = None
+
+
+def get_aws_credentials(profile, filepath):
+    filename = path.expanduser(filepath)
+    if path.isfile(filename):
+        config = configparser.RawConfigParser()
+        config.read(filename)
+        return Credentials(*config[profile].values())
+    else:
+        raise FileNotFoundError(f"{filepath} could not be found.")
 
 
 def create_test_environment():
