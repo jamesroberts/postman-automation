@@ -39,11 +39,21 @@ def get_aws_credentials(profile, filepath):
 
 
 def create_test_environment():
-    variables = [PostmanVariable("size", "5")]
-    content = PostmanEnvironment(variables)
-    content.write_to_file("./Test-env.postman_environment.json")
+    environment = PostmanEnvironment([PostmanVariable("size", "5")])
+    environment.write_to_file('test-env.json')
+
+
+def create_aws_sigV4_environment(credentials):
+    environment = PostmanEnvironment([
+        PostmanVariable("AWS_ACCESS_KEY_ID", credentials.access_key),
+        PostmanVariable("AWS_SECRET_ACCESS_KEY", credentials.secret_key),
+        PostmanVariable("AWS_SESSION_TOKEN", credentials.token),
+    ])
+    environment.write_to_file('aws-env.json')
 
 
 print("Creating...")
 create_test_environment()
+credentials = get_aws_credentials("default", "~/.aws/credentials")
+create_aws_sigV4_environment(credentials)
 print("Done")
