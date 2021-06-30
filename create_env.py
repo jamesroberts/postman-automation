@@ -21,6 +21,7 @@ class PostmanVariable:
 
 @dataclass
 class PostmanEnvironment:
+    name: str
     values: List[PostmanVariable]
 
     def write_to_file(self, filepath: str):
@@ -43,11 +44,11 @@ def write_environment_to_file(environment: PostmanEnvironment, filepath: str):
 
 
 def create_test_environment():
-    return PostmanEnvironment([PostmanVariable("size", "5")])
+    return PostmanEnvironment("TestEnv", [PostmanVariable("size", "5")])
 
 
 def create_aws_sigV4_environment(credentials: Credentials):
-    return PostmanEnvironment([
+    return PostmanEnvironment("AWS SigV4", [
         PostmanVariable("AWS_ACCESS_KEY_ID", credentials.access_key),
         PostmanVariable("AWS_SECRET_ACCESS_KEY", credentials.secret_key),
         PostmanVariable("AWS_SESSION_TOKEN", credentials.token),
